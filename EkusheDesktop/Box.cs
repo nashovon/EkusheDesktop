@@ -20,29 +20,13 @@ namespace EkusheDesktop
         {
             InitializeComponent();
             timer1.Start();
-            //train();
             
+
         }
         Suggestion suggestion = new Suggestion();
         Prediction prediction = new Prediction();
         Refine refine = new Refine();
-        //public void train()
-        //{
-        //    StreamReader reader = File.OpenText("vocabulary.txt");
-        //    string line;
-        //    while ((line = reader.ReadLine()) != null)
-        //    {
-        //        string[] items = line.Split(' ');
-
-        //        foreach (string ss in items)
-        //        {
-        //            trie.AddWord(ss);
-        //        }
-
-
-
-        //    }
-        //}
+       
 
 
 
@@ -79,7 +63,7 @@ namespace EkusheDesktop
         GUITHREADINFO guiInfo;                     // To store GUI Thread Information
         Point caretPosition;                     // To store Caret Position  
 
-       // ITrie trie = new Trie();
+        // ITrie trie = new Trie();
         #endregion
 
 
@@ -115,21 +99,12 @@ namespace EkusheDesktop
 
         #region Event Handlers 
 
-        //int flag = 0;
-        //public void str_fillup()
-        //{
-        //    if (flag == 0)
-        //    {
-        //        str_suggestion[0] = "A";// { "A", "B", "C", "D", "E" };
-
-
-        //        flag = 1;
-        //    }
-        //    return;
-        //}
+ 
 
         string temp = null;
+        string main = null;
         RidmikParser parser = new RidmikParser();
+        GlobalKeyboardHook ghook = new GlobalKeyboardHook();
 
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -145,20 +120,22 @@ namespace EkusheDesktop
 
             // Get Current active Process
             string activeProcess = GetActiveProcess();
-            string main = Refine.output;
+             main = Refine.output;
 
 
 
             if (main != temp && main != null)
             {
-                UpdateListBox(main);
+                suggestion.Getlist(main);
+                show_sugg();
                 temp = main;
             }
 
-            if (main==null && temp!=null)
+            if (main == null && temp != null)
             {
                 //Console.WriteLine(temp);
-                show_pred(parser.toBangla(temp));
+                prediction.Getlist(parser.toBangla(Refine.prev_output));
+                show_pred();
             }
 
 
@@ -171,6 +148,7 @@ namespace EkusheDesktop
             if ((activeProcess.ToLower().Contains("explorer") | (activeProcess == string.Empty)))
             {
                 // Dissappear 
+                //ghook.unhook();
                 this.Visible = false;
             }
             // else if (str_suggestion[0] == null)
@@ -187,6 +165,7 @@ namespace EkusheDesktop
 
                 // Display current active Process on Tooltip
                 // lblCurrentApp.Text = " You are Currently inside : " + activeProcess;
+                //ghook.hook();
                 this.Visible = true;
             }
         }
@@ -241,8 +220,8 @@ namespace EkusheDesktop
 
             ClientToScreen(guiInfo.hwndCaret, out caretPosition);
 
-            //txtCaretX.Text = (caretPosition.X).ToString();
-            //txtCaretY.Text = caretPosition.Y.ToString();
+            //Debug.WriteLine(caretPosition.X.ToString());
+            //Debug.WriteLine(caretPosition.Y.ToString());
 
         }
 
@@ -310,69 +289,46 @@ namespace EkusheDesktop
 
         }
 
-        public void UpdateListBox(string main)
+        public void show_sugg()
         {
             //Console.WriteLine("update");
             listBox1.Items.Clear();
-            IEnumerable<string> PrefixWords = suggestion.Getlist(Refine.output);
 
-            listBox1.Items.Add(main);
+            listBox1.Items.Add(parser.toBangla(Refine.output));
 
             listBox1.Items.Add("\n\n\n");
 
             int i = 1;
-            foreach (string ss in PrefixWords)
+            foreach (string ss in Refine.central)
             {
                 if (i > 5) break;
                 listBox1.Items.Add(i + " " + parser.toBangla(ss));
                 listBox1.Items.Add("\n");
-                //Console.WriteLine(ss);
                 i++;
             }
 
-    }
+        }
 
-        public void show_pred(string ss)
+        public void show_pred()
         {
-           
+
             listBox1.Items.Clear();
 
-            
-            string[] words = prediction.Getlist(ss);
+            listBox1.Items.Add("\n\n\n\n");
 
-            listBox1.Items.Add("\n\n\n");
+            int i = 1;
+            foreach (string ss in Refine.central)
+            {
+                if (i > 5) break;
+                listBox1.Items.Add(i + " " + parser.toBangla(ss));
+                listBox1.Items.Add("\n");
+                i++;
+            }
 
-            int j = 1;
-                for (int i=words.Length-1; ;i--)
-                {
-                    if (j > 5 || i<=0) break;
-                    listBox1.Items.Add(j+" "+words[i]);
-                    listBox1.Items.Add("\n");
-                   // Debug.WriteLine(words[i]);
-                    j++;
-                }
-            
             // }
         }
 
-        //public string GetWord(int n)
-        //{
 
-        //    IEnumerable<string> PrefixWords = trie.GetWords(Refine.output);
-
-        //    int i = 1;
-        //    string value = null;
-
-        //    foreach (string ss in PrefixWords)
-        //    {
-        //        if (i > n) break;
-        //        value = ss;
-        //        //Console.WriteLine(ss);
-        //        i++;
-        //    }
-
-        //    return value;
-        //}
 
 
         private void onFocusChange(object sender, EventArgs e)

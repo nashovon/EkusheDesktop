@@ -13,6 +13,7 @@ namespace EkusheDesktop
 
 
         ITrie trie = new Trie();
+        //Refine refine = new refine();
 
         public Suggestion()
         {
@@ -35,9 +36,18 @@ namespace EkusheDesktop
             }
         }
 
-        public IEnumerable<string> Getlist(string source)
+        public void Getlist(string source)
         {
-            return trie.GetWords(source);
+
+
+            IEnumerable<string> temp = trie.GetWords(source);
+            int i = 0;
+            foreach (string ss in temp)
+            {
+                if (i >= 5) break; 
+                Refine.central[i++] = ss;
+            }
+
         }
 
 

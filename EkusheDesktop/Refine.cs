@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsInput;
 
 namespace EkusheDesktop
 {
@@ -21,27 +16,32 @@ namespace EkusheDesktop
         Suggestion suggestion = new Suggestion();
         Prediction prediction = new Prediction();
         //box b = new box();
-    
+
 
         public static string output = null;
-        public static bool next_words = false;
         public static string prev_output = null;
+
+        public static string[] central = { "1", "2", "3", "4", "5" };
 
 
 
         public void press_space(string temp)
         {
-                if (!string.IsNullOrEmpty(temp)) output = temp;
-                pressed = 0;
-                if (!string.IsNullOrEmpty(output))
-                {
-                    SendKeys.Send(parser.toBangla(output));
-                }
+            if (!string.IsNullOrEmpty(temp)) output = temp;
+            pressed = 0;
+            if (!string.IsNullOrEmpty(output))
+            {
+                SendKeys.Send(parser.toBangla(output));
+                prev_output = output;
                 output = null;
-                SendKeys.Send(" ");
-                next_words = true;
+               
+            }
 
-            //Console.WriteLine(output + " " + prev_output);
+
+            SendKeys.Send(" ");
+
+
+
 
         }
 
@@ -73,7 +73,6 @@ namespace EkusheDesktop
 
         public void compose(int temp)
         {
-            next_words = false;
             temp += 32 * capital;
             char letter = Convert.ToChar(temp);
             output = output + letter.ToString();
@@ -94,8 +93,8 @@ namespace EkusheDesktop
 
                 if (pressed == 1)
                 {
-                    prev_output = output;
-                    Debug.WriteLine(prev_output);
+                    //prev_output = output;
+                    //Debug.WriteLine(prev_output);
                     press_space(null);
 
                 }
@@ -128,24 +127,26 @@ namespace EkusheDesktop
                 {
                     pressed = 0;
 
-                    if (!string.IsNullOrEmpty(output))
-                    {
+                    press_space(central[input - 49]);
 
-                        IEnumerable<string> PrefixWords = suggestion.Getlist(output);
+                    //if (!string.IsNullOrEmpty(output))
+                    //{
 
-                        int temp = input - 48;
-                        int i = 0;
-                        string gg = null;
-                        foreach (string ss in PrefixWords)
-                        {
-                            if (i >= temp) break;
-                            i++;
-                            gg = ss;
-                        }
-                        if (!string.IsNullOrEmpty(gg)) press_space(gg);
-                        else press_number(input);
 
-                    }
+
+                    //    int temp = input - 48;
+                    //    int i = 0;
+                    //    string gg = null;
+                    //    foreach (string ss in PrefixWords)
+                    //    {
+                    //        if (i >= temp) break;
+                    //        i++;
+                    //        gg = ss;
+                    //    }
+                    //    if (!string.IsNullOrEmpty(gg)) press_space(gg);
+                    //    else press_number(input);
+
+                    //}
                     //else if (next_words)
                     //{
                     //    Debug.WriteLine("here");
@@ -164,10 +165,10 @@ namespace EkusheDesktop
                     //}
 
 
-                    else
-                    {
-                        press_number(input);
-                    }
+                    //else
+                    //{
+                    //    press_number(input);
+                    //}
 
                 }
                 else pressed = 1;
@@ -183,12 +184,12 @@ namespace EkusheDesktop
                 }
                 else pressed = 1;
             }
-           
+
 
         }
 
-          
-            #endregion 
-        }
+
+        #endregion
     }
+}
 

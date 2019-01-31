@@ -5,13 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Diagnostics;
 
-namespace EkusheDesktop {
+namespace EkusheDesktop
+{
 
-    public class Prediction {
+    public class Prediction
+    {
 
 
 
-        
+
         //Next Word Prediction
         public static List<string> al_comments = new List<string>();
         public static IList<Dictionary<string, int>> list_of_words_mp = new List<Dictionary<string, int>>();
@@ -135,9 +137,9 @@ namespace EkusheDesktop {
         }
 
 
-            public string[] Getlist(string cur_word)
+        public void Getlist(string cur_word)
         {
-            
+
 
             bool trigram_flag = false;
             int temp = -1;
@@ -170,7 +172,7 @@ namespace EkusheDesktop {
             }
             Dictionary<string, int> tt_cur_mp = list_of_words_mp_in_function[word_idx];
 
-           string[] keys = tt_cur_mp.Keys.OrderBy(v => v).ToArray();
+            string[] keys = tt_cur_mp.Keys.OrderBy(v => v).ToArray();
 
             //foreach (string ss in keys)
             //{
@@ -193,7 +195,17 @@ namespace EkusheDesktop {
             //CandidatesViewShown = true;
             //mCandidateView.setSuggestions(possibleNextWOrdsInBng, true, true);
 
-            return keys;
+            //string[] final = null;
+            //int j = 0;
+
+            int i = 0;
+            foreach (string ss in keys)
+            {
+                if (i >= 5) break;
+                Refine.central[i++] = ss;
+            }
+
+
         }
 
 
@@ -201,4 +213,4 @@ namespace EkusheDesktop {
 
 
     }
- }
+}
