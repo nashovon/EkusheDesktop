@@ -120,4 +120,30 @@
   <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAAAG8AAABvAfGi3EMAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwa
+        AAABi0lEQVQ4T2P4//8/QXzBWt1xpTzP7sWyHLWrGBiYkeVQFOLC5y01T2zXkjyyWIbz/xJZrt0LpXmF
+        YXIYirHhc5aan89aan5cpch/H2QIEN+GGYJVAzJeIs3hvF9P7g7QkP9nLdTvLJXj+QRzCcg7WDXBMEgz
+        UPGfJbKc30AGQAzRuLUS5hJgmGDVCMIwzWCFQLxWSeABzBAgfgcKk+Vy3DvhGs7ZqogCJRYB8dqjJsot
+        yJphGOjsL4cM5R8C1fw5Z6V584KVhhvCAEutTVDTQfjnKkW+n+gGAPEfkMuAQccI04dkgOYBJAP+nzRT
+        u4tVM1Q9DCMMsNDyBGr8h24I1CVYNYMwCueclVYvsgFQ/POokVI9sjpkDGc8fvyY89a1x8fOORlfwGLI
+        MmRNyBjOuHnrxaSbt1/8v3X98bHzltpdQE1w75y31JqJrAkZg4lbt166AjX/BRkCcglIDBgrzsDkuxNo
+        wIaTZhrwtI+OGS49fCgI1HwCZAg2BYQww43bL/xAhmCTJIz/MwAA5Wt6+t01QMwAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="button2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAAAHgAAAB4AeryavYAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwa
+        AAABQklEQVQ4T2P4//8/Kj7Mq/b/IF/D/wN8m4H0MzCGsBvAcmjqkTgMjP8P8RX8P8j/Daj4P3YMlAOp
+        AamF6kNoPsi3FVMDTrwVZgjEALDNWBXixmCXgAwA+xnh7P1TpP472xn8X9YsB1c8pUzxv6u9wf/zC8QR
+        BoD0APUyADkNCEG+/31FSv+NjY3/F8VrwMWi/XXAYkuRDIXiegZoCMMFP+0Q+L++U/b/y01CcLFHa4X/
+        b+yW+f99Nz9cDIyBekEuAEUVqgTx+BkVDEDzAkkY6gV4IP7ex///8iIxTIVQfH2p6P+/B1DEgIGIFI0g
+        yRmViv97i5T/v9kiCFf4fpvg/wklSmC5f3ADYNGIJSFdA9oE0lCXrvq/PkMVHLUg25HVIBISyACKkzLM
+        ELBLEKkSEwPlwDZDNKMZAMXgMCE2O/9nAADfwKd3JwH1AwAAAABJRU5ErkJggg==
+</value>
+  </data>
 </root>

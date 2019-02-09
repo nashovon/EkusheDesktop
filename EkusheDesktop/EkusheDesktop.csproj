@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\MetroFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,10 +57,23 @@
     <Compile Include="Box.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Box.Designer.cs">
+    <Compile Include="Box.designer.cs">
       <DependentUpon>Box.cs</DependentUpon>
     </Compile>
+    <Compile Include="Ebox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ebox.Designer.cs">
+      <DependentUpon>Ebox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Emoji.cs" />
     <Compile Include="Dictionary.cs" />
+    <Compile Include="Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu.Designer.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlobalKeyBoardHook.cs" />
     <Compile Include="ITrie.cs" />
     <Compile Include="ITrieMap.TValue.cs" />
@@ -81,6 +98,12 @@
     <Compile Include="Wrapped.cs" />
     <EmbeddedResource Include="Box.resx">
       <DependentUpon>Box.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ebox.resx">
+      <DependentUpon>Ebox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu.resx">
+      <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="keyboard.resx">
       <DependentUpon>keyboard.cs</DependentUpon>
@@ -107,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MetroFramework.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

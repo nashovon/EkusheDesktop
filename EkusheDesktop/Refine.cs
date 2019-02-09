@@ -15,6 +15,7 @@ namespace EkusheDesktop
         RidmikParser parser = new RidmikParser();
         Suggestion suggestion = new Suggestion();
         Prediction prediction = new Prediction();
+        BanglaUnicode mapps = new BanglaUnicode();
         //box b = new box();
 
 
@@ -28,8 +29,14 @@ namespace EkusheDesktop
         public void press_space(string temp)
         {
             if (!string.IsNullOrEmpty(temp)) output = temp;
-            pressed = 0;
-            if (!string.IsNullOrEmpty(output))
+            pressed = 1;
+            if (mapps.getDirect(output) != null)
+            {
+                SendKeys.Send(mapps.getDirect(output));
+                prev_output = output;
+                output = null;
+            }
+            else if (!string.IsNullOrEmpty(output))
             {
                 SendKeys.Send(parser.toBangla(output));
                 prev_output = output;
@@ -91,14 +98,14 @@ namespace EkusheDesktop
             if (input == 32)
             {
 
-                if (pressed == 1)
+                if (pressed == 0)
                 {
                     //prev_output = output;
                     //Debug.WriteLine(prev_output);
                     press_space(null);
 
                 }
-                else pressed = 1;
+                else pressed = 0;
 
             }
 
@@ -112,77 +119,45 @@ namespace EkusheDesktop
             else if (input == 8)
             {
 
-                if (pressed == 1)
+                if (pressed == 0)
                 {
-                    pressed = 0;
+                    pressed = 1;
 
                     press_backspace();
                 }
-                else pressed = 1;
+                else pressed = 0;
 
             }
             else if (input >= 48 && input <= 57)
             {
-                if (pressed == 1)
+                if (pressed == 0)
                 {
-                    pressed = 0;
+                    pressed = 1;
 
-                    press_space(central[input - 49]);
+                    try
+                    {
 
-                    //if (!string.IsNullOrEmpty(output))
-                    //{
-
-
-
-                    //    int temp = input - 48;
-                    //    int i = 0;
-                    //    string gg = null;
-                    //    foreach (string ss in PrefixWords)
-                    //    {
-                    //        if (i >= temp) break;
-                    //        i++;
-                    //        gg = ss;
-                    //    }
-                    //    if (!string.IsNullOrEmpty(gg)) press_space(gg);
-                    //    else press_number(input);
-
-                    //}
-                    //else if (next_words)
-                    //{
-                    //    Debug.WriteLine("here");
-                    //    string[] words = prediction.Getlist(prev_output);
-
-                    //    int j = 1;
-                    //    int temp = input - 48;
-                    //    string gg = null;
-                    //    for (int i = words.Length - 1; ; i--)
-                    //    {
-                    //        if (j >= temp || i <= 0) break;
-                    //        j++;
-                    //        gg = words[i];
-                    //    }
-                    //    press_space(gg);
-                    //}
-
-
-                    //else
-                    //{
-                    //    press_number(input);
-                    //}
+                        press_space(central[input - 49]);
+                    }
+                    catch(Exception ex)
+                    {
+                        Debug.WriteLine("1-5 only");
+                    }
+            
 
                 }
-                else pressed = 1;
+                else pressed = 0;
             }
             else if ((input >= 65 && input <= 90))
             {
-                if (pressed == 1)
+                if (pressed == 0)
                 {
 
-                    pressed = 0;
+                    pressed = 1;
                     prev_output = null;
                     compose(input);
                 }
-                else pressed = 1;
+                else pressed = 0;
             }
 
 

@@ -16,17 +16,30 @@ namespace EkusheDesktop
 {
     public partial class Box : Form
     {
+
+
+        Suggestion suggestion = new Suggestion();
+        Prediction prediction = new Prediction();
+        Refine refine = new Refine();
+        RidmikParser parser = new RidmikParser();
+        GlobalKeyboardHook ghook = new GlobalKeyboardHook();
+        BanglaUnicode mapps = new BanglaUnicode();
+        bool hooked;
+        bool Hidden;
+        int panelWidth;
+        bool fix;
+        bool emoji;
+
         public Box()
         {
             InitializeComponent();
             timer1.Start();
+            hooked = false;
+            emoji = false;
             
-
         }
-        Suggestion suggestion = new Suggestion();
-        Prediction prediction = new Prediction();
-        Refine refine = new Refine();
-       
+
+
 
 
 
@@ -63,7 +76,6 @@ namespace EkusheDesktop
         GUITHREADINFO guiInfo;                     // To store GUI Thread Information
         Point caretPosition;                     // To store Caret Position  
 
-        // ITrie trie = new Trie();
         #endregion
 
 
@@ -99,16 +111,14 @@ namespace EkusheDesktop
 
         #region Event Handlers 
 
- 
 
         string temp = null;
         string main = null;
-        RidmikParser parser = new RidmikParser();
-        GlobalKeyboardHook ghook = new GlobalKeyboardHook();
 
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+
 
             if (GetForegroundWindow() == this.Handle)
             {
@@ -119,8 +129,8 @@ namespace EkusheDesktop
             }
 
             // Get Current active Process
-            string activeProcess = GetActiveProcess();
-             main = Refine.output;
+            //string activeProcess = GetActiveProcess();
+            main = Refine.output;
 
 
 
@@ -145,31 +155,34 @@ namespace EkusheDesktop
 
             // If window explorer is active window (eg. user has opened any drive)
             // Or for any failure when activeProcess is nothing               
-            if ((activeProcess.ToLower().Contains("explorer") | (activeProcess == string.Empty)))
-            {
-                // Dissappear 
-                //ghook.unhook();
-                this.Visible = false;
-            }
-            // else if (str_suggestion[0] == null)
+            //if ((activeProcess.ToLower().Contains("explorer") | (activeProcess == string.Empty)))
             //{
-            //  this.Visible = false;
+            //    // Dissappear 
+            //    //ghook.unhook();
+            //    this.Visible = false;
             //}
-            else
+            //// else if (str_suggestion[0] == null)
+            ////{
+            ////  this.Visible = false;
+            ////}
+            //else
+            //{
+            // Otherwise Calculate Caret position
+            EvaluateCaretPosition();
+
+            // Adjust ToolTip according to the Caret
+            if (fix == false)
             {
-                // Otherwise Calculate Caret position
-                EvaluateCaretPosition();
-
-                // Adjust ToolTip according to the Caret
                 AdjustUI();
-
-                // Display current active Process on Tooltip
-                // lblCurrentApp.Text = " You are Currently inside : " + activeProcess;
-                //ghook.hook();
-                this.Visible = true;
             }
-        }
 
+
+            //    // Display current active Process on Tooltip
+            //    // lblCurrentApp.Text = " You are Currently inside : " + activeProcess;
+            //    //ghook.hook();
+            //    this.Visible = true;
+            //}
+        }
 
         #endregion
 
@@ -180,7 +193,7 @@ namespace EkusheDesktop
 
 
 
-        /// <summary>
+        // <summary>
         /// This function will adjust Tooltip position and
         /// will keep it always inside the screen area.
         /// </summary>
@@ -210,18 +223,45 @@ namespace EkusheDesktop
         /// </summary>
         private void EvaluateCaretPosition()
         {
+
+
             caretPosition = new Point();
 
             // Fetch GUITHREADINFO
             GetCaretPosition();
 
-            caretPosition.X = (int)guiInfo.rcCaret.Left + 25;
-            caretPosition.Y = (int)guiInfo.rcCaret.Bottom + 25;
+            caretPosition.X = (int)guiInfo.rcCaret.Left;
+            caretPosition.Y = (int)guiInfo.rcCaret.Bottom;
 
-            ClientToScreen(guiInfo.hwndCaret, out caretPosition);
+            if ((caretPosition.X > 0 && caretPosition.Y > 0) || GetForegroundProcessName() == "chrome")
+            {
+
+                caretPosition.X += 25;
+                caretPosition.Y += 25;
+                //    Debug.WriteLine("True");
+                ClientToScreen(guiInfo.hwndCaret, out caretPosition);
+
+                if (hooked == false)
+                {
+                    ghook.hook();
+                    this.Visible = true;
+                    hooked = true;
+                }
+
+            }
+            else if (hooked == true)
+            {
+                ghook.unhook();
+                this.Visible = false;
+                hooked = false;
+            }
+
+
+
 
             //Debug.WriteLine(caretPosition.X.ToString());
             //Debug.WriteLine(caretPosition.Y.ToString());
+
 
         }
 
@@ -235,30 +275,54 @@ namespace EkusheDesktop
 
             // Get GuiThreadInfo into guiInfo
             GetGUIThreadInfo(0, out guiInfo);
+
         }
 
+
+
+        private string GetForegroundProcessName()
+        {
+            IntPtr hwnd = GetForegroundWindow();
+
+            // The foreground window can be NULL in certain circumstances, 
+            // such as when a window is losing activation.
+            if (hwnd == null)
+                return "Unknown";
+
+            uint pid;
+            GetWindowThreadProcessId((int)hwnd, out pid);
+
+            foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
+            {
+                if (p.Id == pid)
+                    return p.ProcessName;
+            }
+
+            return "Unknown";
+        }
         /// <summary>
         /// Retrieves name of active Process.
         /// </summary>
         /// <returns>Active Process Name</returns>
-        private string GetActiveProcess()
-        {
-            const int nChars = 256;
-            int handle = 0;
-            StringBuilder Buff = new StringBuilder(nChars);
-            handle = (int)GetForegroundWindow();
+        //private string GetActiveProcess()
+        //{
+        //    const int nChars = 256;
+        //    int handle = 0;
+        //    StringBuilder Buff = new StringBuilder(nChars);
+        //    handle = (int)GetForegroundWindow();
 
-            // If Active window has some title info
-            if (GetWindowText(handle, Buff, nChars) > 0)
-            {
-                uint lpdwProcessId;
-                uint dwCaretID = GetWindowThreadProcessId(handle, out lpdwProcessId);
-                uint dwCurrentID = (uint)Thread.CurrentThread.ManagedThreadId;
-                return Process.GetProcessById((int)lpdwProcessId).ProcessName;
-            }
-            // Otherwise either error or non client region
-            return String.Empty;
-        }
+        //    // If Active window has some title info
+        //    if (GetWindowText(handle, Buff, nChars) > 0)
+        //    {
+        //        uint lpdwProcessId;
+        //        uint dwCaretID = GetWindowThreadProcessId(handle, out lpdwProcessId);
+        //        uint dwCurrentID = (uint)Thread.CurrentThread.ManagedThreadId;
+        //        return Process.GetProcessById((int)lpdwProcessId).ProcessName;
+        //    }
+        //    // Otherwise either error or non client region
+        //    return String.Empty;
+        //}
+
 
 
         #endregion
@@ -289,20 +353,29 @@ namespace EkusheDesktop
 
         }
 
+
+
         public void show_sugg()
         {
             //Console.WriteLine("update");
             listBox1.Items.Clear();
 
-            listBox1.Items.Add(parser.toBangla(Refine.output));
+            listBox1.Items.Add(Refine.output);
 
-            listBox1.Items.Add("\n\n\n");
+            listBox1.Items.Add("\n");
+
+
+            if (mapps.getDirect(Refine.output) != null) listBox1.Items.Add(parser.toBangla(mapps.getDirect(Refine.output)));
+
+            else listBox1.Items.Add(parser.toBangla(Refine.output));
+
+            listBox1.Items.Add("\n");
 
             int i = 1;
             foreach (string ss in Refine.central)
             {
                 if (i > 5) break;
-                listBox1.Items.Add(i + " " + parser.toBangla(ss));
+                listBox1.Items.Add(" " + i + " " + parser.toBangla(ss));
                 listBox1.Items.Add("\n");
                 i++;
             }
@@ -314,13 +387,16 @@ namespace EkusheDesktop
 
             listBox1.Items.Clear();
 
-            listBox1.Items.Add("\n\n\n\n");
+            listBox1.Items.Add("\n");
+            listBox1.Items.Add("\n");
+            listBox1.Items.Add("\n");
+
 
             int i = 1;
             foreach (string ss in Refine.central)
             {
                 if (i > 5) break;
-                listBox1.Items.Add(i + " " + parser.toBangla(ss));
+                listBox1.Items.Add(" " + i + " " + parser.toBangla(ss));
                 listBox1.Items.Add("\n");
                 i++;
             }
@@ -329,13 +405,37 @@ namespace EkusheDesktop
         }
 
 
+        private const int WM_NCHITTEST = 0x84;
+        private const int HTCLIENT = 0x1;
+        private const int HTCAPTION = 0x2;
 
+        protected override void WndProc(ref Message message)
+        {
+
+            base.WndProc(ref message);
+
+            if (message.Msg == WM_NCHITTEST && (int)message.Result == HTCLIENT)
+            {
+                message.Result = (IntPtr)HTCAPTION;
+                //fix = true;
+
+            }
+        }
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams param = base.CreateParams;
+                param.ExStyle |= 0x08000000;
+                return param;
+            }
+
+        }
 
         private void onFocusChange(object sender, EventArgs e)
         {
             this.Visible = false;
         }
-
         //This method helps to select item by mouse clicking
         private void listBox1_itemSelected(object sender, EventArgs e)
         {
@@ -344,33 +444,80 @@ namespace EkusheDesktop
             //SendKeys.Send(listBox1.SelectedItem.ToString());
         }
 
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+           // Application.Exit();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+          
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel2_Paint_1(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (fix) fix = false;
+            else fix = true;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Ebox ebox = new Ebox();
+            //if (!emoji)
+            //{
+                ebox.Show();
+                //emoji = true;
+            //}
+            //else
+            //{
+            //    ebox=null;
+            //    emoji = false;
+            //}
+
+        }
+
 
         //This method helps to selet item by Enter/space key pressing
 
 
-        private void listBox1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                MessageBox.Show("Selected by Enter key -->" + listBox1.SelectedItem.ToString());
-            }
-            else if (e.KeyCode == Keys.Space)
-            {
-                MessageBox.Show("Selected by space Key -->" + listBox1.SelectedItem.ToString());
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                listBox1.Items.Clear();
-            }
-            else if (e.KeyCode == Keys.Back)
-            {
-                listBox1.Items.Clear();
+        //private void listBox1_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode == Keys.Enter)
+        //    {
+        //        MessageBox.Show("Selected by Enter key -->" + listBox1.SelectedItem.ToString());
+        //    }
+        //    else if (e.KeyCode == Keys.Space)
+        //    {
+        //        MessageBox.Show("Selected by space Key -->" + listBox1.SelectedItem.ToString());
+        //    }
+        //    else if (e.KeyCode == Keys.Escape)
+        //    {
+        //        listBox1.Items.Clear();
+        //    }
+        //    else if (e.KeyCode == Keys.Back)
+        //    {
+        //        listBox1.Items.Clear();
 
-                //UpdateListBox(Refine.out);
-            }
+        //        //UpdateListBox(Refine.out);
+        //    }
 
 
-        }
+        //}
 
     }
 }

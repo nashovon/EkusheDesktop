@@ -14,11 +14,19 @@ namespace EkusheDesktop
         [STAThread]
         static void Main()
         {
-            GlobalKeyboardHook gHook = new GlobalKeyboardHook();
-            gHook.hook();
+          
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Box());
+            //Box box = new Box();
+            Menu form2 = new Menu();
+            form2.StartPosition = FormStartPosition.Manual;
+            form2.Left = 1200;
+            form2.Top = 50;
+            form2.Show();
+            Application.Run();
+
+            
+            
         }
     }
 }

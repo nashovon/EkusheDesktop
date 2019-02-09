@@ -42,7 +42,7 @@ namespace EkusheDesktop
             StringBuilder sBuffer = new StringBuilder();
             StreamReader br_ = File.OpenText("test_corpus.txt");
 
-            int i = 0;
+            //int i = 0;
             string strLine;
             while ((strLine = br_.ReadLine()) != null)
             {

@@ -27,7 +27,7 @@ namespace EkusheDesktop
             {
                 state = true;
                 gHook.hook();
-                Box b = new Box();
+                Ebox b = new Ebox();
                 b.Show();
             }
             else

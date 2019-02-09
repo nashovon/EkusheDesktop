@@ -62,11 +62,13 @@ namespace EkusheDesktop
         {
             IntPtr hInstance = LoadLibrary("User32");
             Hook = SetWindowsHookEx(WH_KEYBOARD_LL, llkh, hInstance, 0);
+            //Debug.WriteLine("hooked");
         }
 
         public void unhook()
         {
             UnhookWindowsHookEx(Hook);
+            //Debug.WriteLine("unhooked");
         }
 
         public int HookProc(int Code, int wParam, ref keyBoardHookStruct lParam)
@@ -84,20 +86,20 @@ namespace EkusheDesktop
                     refine.converter(lParam.vkCode);
                     return 1;
                 }
-                else Debug.WriteLine("This key is not processed yet.");
+                //else Debug.WriteLine("This key is not processed yet.");
 
 
                 // Console.Out.WriteLine(key);
-                if (HookedKeys.Contains(key))
-                {
-                    KeyEventArgs kArg = new KeyEventArgs(key);
-                    if ((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && (KeyDown != null))
-                        KeyDown(this, kArg);
-                    else if ((wParam == WM_KEYUP || wParam == WM_SYSKEYUP) && (KeyUp != null))
-                        KeyUp(this, kArg);
-                    if (kArg.Handled)
-                        return 1;
-                }
+                //if (HookedKeys.Contains(key))
+                //{
+                //    KeyEventArgs kArg = new KeyEventArgs(key);
+                //    if ((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && (KeyDown != null))
+                //        KeyDown(this, kArg);
+                //    else if ((wParam == WM_KEYUP || wParam == WM_SYSKEYUP) && (KeyUp != null))
+                //        KeyUp(this, kArg);
+                //    if (kArg.Handled)
+                //        return 1;
+                //}
             }
 
             return CallNextHookEx(Hook, Code, wParam, ref lParam);

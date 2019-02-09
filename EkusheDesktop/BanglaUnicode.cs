@@ -17,6 +17,7 @@ namespace EkusheDesktop
         private IDictionary<string, string> djkt = new Dictionary<string, string>();
         private IDictionary<string, string> djktt = new Dictionary<string, string>();
         private IDictionary<string, string> num = new Dictionary<string, string>();
+        private IDictionary<string, string> direct = new Dictionary<string, string>();
 
 
         public BanglaUnicode(){
@@ -188,6 +189,13 @@ namespace EkusheDesktop
             num.Add("9", "৯");
             num.Add("0", "০");
 
+            //direct
+            direct.Add("class", "ক্লাস");
+            direct.Add("mobile", "মোবাইল");
+            direct.Add("bank", "ব্যাঙ্ক");
+            direct.Add("bag", "ব্যাগ");
+            direct.Add("school", "স্কুল");
+
 
         }
 
@@ -255,6 +263,18 @@ namespace EkusheDesktop
             //Console.WriteLine(result);
             if (djkt.TryGetValue(result, out value)) return value;
             else return null;
+        }
+        public String getDirect(string result)
+        {
+            string value = null;
+            if (result != null)
+            {
+                direct.TryGetValue(result, out value);
+                
+            }
+            
+            
+            return value;
         }
         //public static void main(String[] a)
         //{
